@@ -5,20 +5,49 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "axios": "^1.6.0"
+    "@aws-sdk/client-dynamodb": "^3.868.0",
+    "@aws-sdk/client-s3": "^3.864.0",
+    "@aws-sdk/client-secrets-manager": "^3.864.0",
+    "@aws-sdk/client-sns": "^3.864.0",
+    "@aws-sdk/cloudfront-signer": "^3.862.0",
+    "@aws-sdk/lib-dynamodb": "^3.868.0",
+    "@aws-sdk/s3-request-presigner": "^3.864.0",
+    "@fy-tools/rpc-client": "^0.0.118",
+    "@fy-tools/rpc-server": "^0.0.118",
+    "@fy-tools/rpc-server-nestjs": "^0.0.118",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
+    "axios": "^1.6.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "kysely": "^0.28.5",
+    "luxon": "^3.7.1",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@nestjs/schematics": "^11.0.7",
+    "@nestjs/testing": "^11.1.6",
     "@nx/esbuild": "21.3.11",
     "@nx/eslint": "21.3.11",
     "@nx/eslint-plugin": "21.3.11",
-    "@nx/js": "21.3.11",
+    "@nx/js": "^21.3.11",
+    "@nx/nest": "^21.3.11",
     "@nx/node": "21.3.11",
+    "@nx/web": "21.3.11",
+    "@nx/webpack": "21.3.11",
     "@nx/workspace": "21.3.11",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@types/luxon": "^3.7.1",
     "@types/node": "~18.16.9",
+    "@types/pg": "^8.15.5",
+    "@types/webpack": "^5.28.5",
+    "@typescript/native-preview": "^7.0.0-dev.20250728.1",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
@@ -26,9 +55,14 @@
     "prettier": "^2.6.2",
     "tslib": "^2.3.0",
     "typescript": "~5.8.2",
-    "typescript-eslint": "^8.29.0"
+    "typescript-eslint": "^8.29.0",
+    "webpack-cli": "^5.1.4"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "services/job-boards/*",
+    "services/data-pipeline",
+    "services/analytics",
+    "libs/*"
   ]
 }

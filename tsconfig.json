@@ -4,10 +4,19 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/backend-e2e"
+      "path": "./apps/server"
     },
     {
-      "path": "./apps/backend"
+      "path": "./libs/schema"
+    },
+    {
+      "path": "./libs/env"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./libs/file"
     }
   ]
 }
