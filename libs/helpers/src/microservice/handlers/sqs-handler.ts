@@ -8,9 +8,10 @@ export function sqsHandler(app: Promise<PlaceholderTransporter>): Handler<SQSEve
     const transporter = await app;
 
     for (const record of event.Records) {
+      Logger.log(record.body, 'event');
+
       const message = JSON.parse(record.body);
       const snsMessage = JSON.parse(message.Message);
-      Logger.log(message, 'event');
 
       const handler = transporter.getHandlerByPattern(snsMessage.message);
       await handler?.(snsMessage.data, context);
