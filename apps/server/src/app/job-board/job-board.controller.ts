@@ -10,7 +10,7 @@ export class JobBoardController {
   }
 
   @createJob.Handler
-  async postJob(body: Body<createJob>) {
+  async postJob(@createJob.Body() body: Body<createJob>) {
     await this.service.createJob(body);
     return { success: true }
   }
