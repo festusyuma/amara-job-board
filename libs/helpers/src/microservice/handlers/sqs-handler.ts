@@ -8,13 +8,12 @@ export function sqsHandler(app: Promise<PlaceholderTransporter>): Handler<SQSEve
     const transporter = await app;
 
     for (const record of event.Records) {
-      Logger.log(record.body, 'event');
+      Logger.log(record, 'event');
 
-      const message = JSON.parse(record.body);
-      const snsMessage = JSON.parse(message.Message);
+      const event = JSON.parse(record.body);
 
-      const handler = transporter.getHandlerByPattern(snsMessage.message);
-      await handler?.(snsMessage.data, context);
+      const handler = transporter.getHandlerByPattern(event.message);
+      await handler?.(event.payload, context);
     }
   };
 }
