@@ -1,8 +1,10 @@
 import { type MessagePayload, MessageType } from '@amara/types';
+import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
 import { MessageService } from './message.service';
 
+@Controller()
 export class MessageController {
   constructor(private service: MessageService) {}
 
