@@ -1,3 +1,4 @@
+import { ChatMessage } from './chat.js';
 import { JobPost, JobPostBoardSyncStatusUpdate, ParsedJobPost } from './job.js';
 
 export const MessageType = {
@@ -8,6 +9,8 @@ export const MessageType = {
   JOB_APPLICATION_PARSED: 'JOB_APPLICATION_PARSED',
   JOB_BOARD_UPDATED: 'JOB_BOARD_UPDATED',
   JOB_SYNC_UPDATED: 'JOB_SYNC_UPDATED',
+  NEW_CHAT_MESSAGE: 'NEW_CHAT_MESSAGE',
+  NEW_CHAT_RESPONSE: 'NEW_CHAT_RESPONSE'
 } as const;
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType];
@@ -15,6 +18,8 @@ export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 export type Message =
   | { message: typeof MessageType.JOB_POSTED; payload: Omit<JobPost, 'id' | 'status'> }
   | { message: typeof MessageType.JOB_PARSED; payload: ParsedJobPost }
+  | { message: typeof MessageType.NEW_CHAT_MESSAGE; payload: ChatMessage }
+  | { message: typeof MessageType.NEW_CHAT_RESPONSE; payload: ChatMessage }
   | { message: typeof MessageType.JOB_APPLICATION; payload: JobPost }
   | { message: typeof MessageType.JOB_APPLICATION_PARSED; payload: JobPost }
   | {

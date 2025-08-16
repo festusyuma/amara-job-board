@@ -1,17 +1,17 @@
-import { JobPost, ParsedJobPost } from '@amara/types';
+import { type MessagePayload, MessageType, ParsedJobPost } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
-import { ModelService } from './model.service';
+import { ModelService } from '../util/model.service';
 
 @Injectable()
 export class ParserService {
   constructor(private model: ModelService) {}
 
-  async parseJob(data: JobPost) {
+  async parseJob(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
     try {
       return await this.model.generate<ParsedJobPost>(
         this.getParseJobPrompt(data.name, data.description)
-      )
+      );
     } catch (error) {
       console.error('Error parsing job post:', error);
       throw new Error('Failed to parse job post.');

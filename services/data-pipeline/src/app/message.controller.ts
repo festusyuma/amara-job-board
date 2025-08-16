@@ -17,4 +17,10 @@ export class MessageController {
     await this.service.parseJobPost(payload);
     return { success: true, payload };
   }
+
+  @MessagePattern(MessageType.NEW_CHAT_MESSAGE)
+  async newChatMessage(payload: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>) {
+    await this.service.handleNewMessage(payload);
+    return { success: true, payload };
+  }
 }
