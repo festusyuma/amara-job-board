@@ -84,7 +84,7 @@ class AppStack extends cdk.Stack {
           attachment: { secret: true }
         },
         analytics: {
-          type: AppType.NODE_APP,
+          type: AppType.IMAGE_APP,
           output: './services/analytics',
           grants: [AppGrant.SECRET],
           queue: {},
@@ -94,7 +94,7 @@ class AppStack extends cdk.Stack {
           },
         },
         dataPipeline: {
-          type: AppType.NODE_APP,
+          type: AppType.IMAGE_APP,
           output: './services/data-pipeline',
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           queue: {},
