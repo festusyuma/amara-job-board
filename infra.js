@@ -77,6 +77,7 @@ class AppStack extends cdk.Stack {
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           buildParams: {
             container: {
+              file: "./event.Dockerfile",
               command: ['node', 'event.js'],
             },
           },

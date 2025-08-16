@@ -1,0 +1,66 @@
+# Run on pull request that targets to sprint branch
+name: AWS Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    environment: ${{ (github.ref_name == 'master' && 'production') || (github.ref_name == 'staging' && 'staging') }}
+    env:
+      ENVIRONMENT: ${{ (github.ref_name == 'master' && 'production') || (github.ref_name == 'staging' && 'staging') || github.ref_name }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-skip-session-tagging: true
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            apps/backend/node_modules
+            apps/sis-web/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm i --prefer-offline --no-audit --verbose
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Apps
+        env:
+          NODE_ENV: production
+          NX_NO_CLOUD: true
+        run: nx build:all
+
+      - name: Deploy Apps
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CRON_ENABLED: true
+        run: nx deploy -- --require-approval never
