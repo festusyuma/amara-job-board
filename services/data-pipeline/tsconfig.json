@@ -4,16 +4,13 @@
   "include": [],
   "references": [
     {
-      "path": "../file"
+      "path": "../../libs/types"
     },
     {
-      "path": "../types"
+      "path": "../../libs/helpers"
     },
     {
-      "path": "../env"
-    },
-    {
-      "path": "./tsconfig.lib.json"
+      "path": "./tsconfig.app.json"
     }
   ]
 }

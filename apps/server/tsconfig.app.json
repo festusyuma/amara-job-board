@@ -19,15 +19,6 @@
   "references": [
     {
       "path": "../../libs/helpers/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/file/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/types/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/env/tsconfig.lib.json"
     }
   ]
 }

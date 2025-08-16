@@ -1,5 +1,5 @@
 {
-  "name": "@amara/server",
+  "name": "@amara/data-pipeline",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -29,15 +29,15 @@
           "build"
         ],
         "options": {
-          "buildTarget": "@amara/server:build",
+          "buildTarget": "@amara/data-pipeline:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "@amara/server:build:development"
+            "buildTarget": "@amara/data-pipeline:build:development"
           },
           "production": {
-            "buildTarget": "@amara/server:build:production"
+            "buildTarget": "@amara/data-pipeline:build:production"
           }
         }
       }

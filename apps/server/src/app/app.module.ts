@@ -1,7 +1,7 @@
+import { UtilModule } from '@amara/helpers/util';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
-import { UtilModule } from './util/util.module';
 
 @Module({
   imports: [UtilModule],

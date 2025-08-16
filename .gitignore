@@ -46,3 +46,5 @@ Thumbs.db
 **/.env.local
 
 test-output
+
+cdk.out

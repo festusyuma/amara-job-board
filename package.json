@@ -2,8 +2,12 @@
   "name": "@amara/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build:all": "nx run-many -t build --parallel",
+    "deploy": "npx cdk deploy"
+  },
   "private": true,
+  "nx": {},
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.868.0",
     "@aws-sdk/client-s3": "^3.864.0",
@@ -15,8 +19,10 @@
     "@fy-tools/rpc-client": "^0.0.118",
     "@fy-tools/rpc-server": "^0.0.118",
     "@fy-tools/rpc-server-nestjs": "^0.0.118",
+    "@google/genai": "^1.14.0",
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
+    "@nestjs/microservices": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
     "axios": "^1.6.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
@@ -29,6 +35,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@fy-stack/cli": "^0.0.146",
+    "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.6",
     "@nx/esbuild": "21.3.11",
@@ -54,6 +62,7 @@
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
+    "globals": "^16.0.0",
     "jest": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
@@ -63,7 +72,13 @@
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
     "typescript-eslint": "^8.29.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "aws-cdk": "^2.1016.1",
+    "aws-cdk-lib": "^2.198.0",
+    "@aws-sdk/client-sts": "^3.799.0",
+    "constructs": "^10.4.2",
+    "@fy-stack/fullstack-construct": "^0.0.146",
+    "@fy-stack/types": "^0.0.146"
   },
   "workspaces": [
     "apps/*",

@@ -1,8 +1,8 @@
+import { EnvService } from '@amara/helpers/util';
 import { Injectable } from '@nestjs/common';
 import { Kysely, ParseJSONResultsPlugin, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
-import { EnvService } from '../util/env.service';
 import { DB } from './types';
 
 @Injectable()

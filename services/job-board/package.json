@@ -1,5 +1,5 @@
 {
-  "name": "@amara/server",
+  "name": "@amara/job-board",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -29,15 +29,15 @@
           "build"
         ],
         "options": {
-          "buildTarget": "@amara/server:build",
+          "buildTarget": "@amara/job-board:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "@amara/server:build:development"
+            "buildTarget": "@amara/job-board:build:development"
           },
           "production": {
-            "buildTarget": "@amara/server:build:production"
+            "buildTarget": "@amara/job-board:build:production"
           }
         }
       }

@@ -12,15 +12,23 @@
     },
     "./microservice": {
       "types": "./src/microservice/index.ts",
-      "import": "./src/microserviceindex.ts",
-      "default": "./src/microserviceindex.ts"
+      "import": "./src/microservice/index.ts",
+      "default": "./src/microservice/index.ts"
     },
     "./microservice/handlers/sqs": {
       "types": "./src/microservice/handlers/sqs-handler.ts",
       "import": "./src/microservice/handlers/sqs-handler.ts",
       "default": "./src/microservice/handlers/sqs-handler.ts"
     },
+    "./util": {
+      "types": "./src/util/index.ts",
+      "import": "./src/util/index.ts",
+      "default": "./src/util/index.ts"
+    },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "nx": {
+    "projectType": "library"
+  }
 }

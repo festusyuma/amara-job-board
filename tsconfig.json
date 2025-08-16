@@ -23,6 +23,12 @@
     },
     {
       "path": "./libs/helpers"
+    },
+    {
+      "path": "./services/job-board"
+    },
+    {
+      "path": "./services/data-pipeline"
     }
   ]
 }

@@ -7,15 +7,6 @@
       "path": "../../libs/helpers"
     },
     {
-      "path": "../../libs/file"
-    },
-    {
-      "path": "../../libs/types"
-    },
-    {
-      "path": "../../libs/env"
-    },
-    {
       "path": "./tsconfig.app.json"
     }
   ]
