@@ -41,12 +41,12 @@ class AppStack extends cdk.Stack {
     const cacheOption = { cacheFrom: undefined, cacheTo: undefined };
 
     if (process.env.GITHUB_ACTIONS === 'true') {
-      const cachePayload = { type: 'gha', params: { mode: 'max' } };
-
-      cacheOption.cacheTo = cachePayload;
-      cacheOption.cacheFrom = [cachePayload];
+      cacheOption.cacheTo = { type: 'gha', params: { mode: 'max' } };
+      cacheOption.cacheFrom = [{ type: 'gha' }];
       cacheOption.outputs = ['type=docker'];
     }
+
+    console.log(JSON.stringify({ cacheOption }));
 
     const app = new FullStackConstruct(this, 'App', {
       environment,
@@ -63,6 +63,7 @@ class AppStack extends cdk.Stack {
               port: 3001,
               container: {
                 command: ['node', 'main.js'],
+                image: { ...cacheOption },
               },
               attachment: { secret: true },
             },
@@ -77,12 +78,13 @@ class AppStack extends cdk.Stack {
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           buildParams: {
             container: {
-              file: "./event.Dockerfile",
+              file: './event.Dockerfile',
               command: ['node', 'event.js'],
+              ...cacheOption,
             },
           },
           queue: {},
-          attachment: { secret: true }
+          attachment: { secret: true },
         },
         analytics: {
           type: AppType.IMAGE_APP,
@@ -91,7 +93,9 @@ class AppStack extends cdk.Stack {
           queue: {},
           attachment: { secret: true },
           buildParams: {
-            container: {},
+            container: {
+              ...cacheOption,
+            },
           },
         },
         dataPipeline: {
@@ -101,7 +105,9 @@ class AppStack extends cdk.Stack {
           queue: {},
           attachment: { secret: true },
           buildParams: {
-            container: {},
+            container: {
+              ...cacheOption,
+            },
           },
         },
         jobBoard: {
@@ -111,14 +117,16 @@ class AppStack extends cdk.Stack {
           queue: {},
           attachment: { secret: true },
           buildParams: {
-            container: {},
+            container: {
+              ...cacheOption,
+            },
           },
         },
       },
       secret: {
         GEMINI_KEY: process.env.GEMINI_KEY,
         PIPELINE_JOB_TABLE: dataPipelineTable.tableName,
-        DATABASE_URL: "db"
+        DATABASE_URL: 'db',
       },
       event: {
         handlers: [
@@ -151,7 +159,10 @@ class AppStack extends cdk.Stack {
       const publicSecurityGroup = server.service.connections.securityGroups[0];
 
       if (publicSecurityGroup) {
-        publicSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(3001))
+        publicSecurityGroup.addIngressRule(
+          ec2.Peer.anyIpv4(),
+          ec2.Port.tcp(3001)
+        );
       }
     }
 
