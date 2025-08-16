@@ -1,6 +1,6 @@
 import { EnvService } from '@amara/helpers/util';
 import { GoogleGenAI } from '@google/genai';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class ModelService {
@@ -17,6 +17,8 @@ export class ModelService {
       contents: content,
       model: 'gemini-2.5-flash-lite',
     });
+
+    Logger.log(res);
 
     const text = res.text;
     if (!text) throw new Error('unable to generate');
