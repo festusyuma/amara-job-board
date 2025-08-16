@@ -1,7 +1,7 @@
 import { getTransporter } from '@amara/helpers/microservice';
 import { sqsHandler } from '@amara/helpers/microservice/handlers/sqs';
 
-import { MessageModule } from './messages/message.module';
+import { MessageModule } from './app/message.module';
 
 const app = getTransporter(MessageModule);
 

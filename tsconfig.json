@@ -17,6 +17,12 @@
     },
     {
       "path": "./libs/file"
+    },
+    {
+      "path": "./services/analytics"
+    },
+    {
+      "path": "./libs/helpers"
     }
   ]
 }

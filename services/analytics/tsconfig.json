@@ -4,10 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../file"
+      "path": "../../libs/helpers"
     },
     {
-      "path": "./tsconfig.lib.json"
+      "path": "./tsconfig.app.json"
     }
   ]
 }
