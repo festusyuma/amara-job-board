@@ -56,11 +56,11 @@ jobs:
         env:
           NODE_ENV: production
           NX_NO_CLOUD: true
-        run: nx build:all
+        run: npx nx build:all
 
       - name: Deploy Apps
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           CRON_ENABLED: true
-        run: nx deploy -- --require-approval never
+        run: npx nx deploy -- --require-approval never
