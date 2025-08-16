@@ -46,8 +46,6 @@ class AppStack extends cdk.Stack {
       cacheOption.outputs = ['type=docker'];
     }
 
-    console.log(JSON.stringify({ cacheOption }));
-
     const app = new FullStackConstruct(this, 'App', {
       environment,
       name: appName,

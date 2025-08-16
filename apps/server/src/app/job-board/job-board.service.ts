@@ -11,7 +11,7 @@ export class JobBoardService {
 
   async createJob(payload: Body<createJob>) {
     // todo save to database
-    Logger.log('created job :: ', payload);
+    Logger.log('created job :: ');
 
     await this.event.sendEvent({
       message: MessageType.JOB_POSTED,
