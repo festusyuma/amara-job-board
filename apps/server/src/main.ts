@@ -15,6 +15,7 @@ async function bootstrap() {
     .setTitle('Amara Job board')
     .setDescription('Api documentation for amara job board aggregator')
     .setVersion('1.0')
+    .addServer('/')
     .addServer('/api')
     .addBearerAuth();
 
