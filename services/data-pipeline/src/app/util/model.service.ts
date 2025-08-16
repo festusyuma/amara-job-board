@@ -1,6 +1,8 @@
 import { EnvService } from '@amara/helpers/util';
 import { GoogleGenAI } from '@google/genai';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ModelService {
   private ai: GoogleGenAI;
 
