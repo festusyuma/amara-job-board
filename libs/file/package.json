@@ -17,5 +17,8 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "nx": {
+    "projectType": "library"
+  }
 }

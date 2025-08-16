@@ -38,6 +38,16 @@ class AppStack extends cdk.Stack {
       billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
     });
 
+    const cacheOption = { cacheFrom: undefined, cacheTo: undefined };
+
+    if (process.env.GITHUB_ACTIONS === 'true') {
+      const cachePayload = { type: 'gha', params: { mode: 'max' } };
+
+      cacheOption.cacheTo = cachePayload;
+      cacheOption.cacheFrom = [cachePayload];
+      cacheOption.outputs = ['type=docker'];
+    }
+
     const app = new FullStackConstruct(this, 'App', {
       environment,
       name: appName,
@@ -47,13 +57,14 @@ class AppStack extends cdk.Stack {
         server: {
           assignPublicIp: true,
           apps: {
-            server: {
+            api: {
               type: AppType.IMAGE_APP,
               output: './apps/server',
               port: 3001,
               container: {
                 command: ['node', 'main.js'],
               },
+              attachment: { secret: true },
             },
           },
           grants: [AppGrant.EVENT, AppGrant.SECRET],
@@ -66,20 +77,20 @@ class AppStack extends cdk.Stack {
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           buildParams: {
             container: {
-              command: ['node', 'main.js'],
+              command: ['node', 'event.js'],
             },
           },
           queue: {},
+          attachment: { secret: true }
         },
         analytics: {
           type: AppType.NODE_APP,
           output: './services/analytics',
           grants: [AppGrant.SECRET],
           queue: {},
+          attachment: { secret: true },
           buildParams: {
-            container: {
-              command: ['node', 'main.js'],
-            },
+            container: {},
           },
         },
         dataPipeline: {
@@ -87,10 +98,9 @@ class AppStack extends cdk.Stack {
           output: './services/data-pipeline',
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           queue: {},
+          attachment: { secret: true },
           buildParams: {
-            container: {
-              command: ['node', 'main.js'],
-            },
+            container: {},
           },
         },
         jobBoard: {
@@ -98,15 +108,16 @@ class AppStack extends cdk.Stack {
           output: './services/job-board',
           grants: [AppGrant.EVENT, AppGrant.SECRET],
           queue: {},
+          attachment: { secret: true },
           buildParams: {
-            container: {
-              command: ['node', 'main.js'],
-            },
+            container: {},
           },
         },
       },
       secret: {
         GEMINI_KEY: process.env.GEMINI_KEY,
+        PIPELINE_JOB_TABLE: dataPipelineTable.tableName,
+        DATABASE_URL: "db"
       },
       event: {
         handlers: [
@@ -136,17 +147,16 @@ class AppStack extends cdk.Stack {
 
     const server = app.ecs.server;
     if (server) {
-      const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
-        allowAllOutbound: true,
-        vpc: app.vpc,
-      });
+      const publicSecurityGroup = server.service.connections.securityGroups[0];
 
-      server.service.connections.addSecurityGroup(publicSecurityGroup);
+      if (publicSecurityGroup) {
+        publicSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(3001))
+      }
     }
 
     const dataPipeline = app.lambda.apps.dataPipeline;
     if (dataPipeline) {
-      dataPipelineTable.grant(dataPipeline.function);
+      dataPipelineTable.grantFullAccess(dataPipeline.function);
     }
   }
 }

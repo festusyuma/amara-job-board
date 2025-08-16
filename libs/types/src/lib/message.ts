@@ -13,7 +13,7 @@ export const MessageType = {
 export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 
 export type Message =
-  | { message: typeof MessageType.JOB_POSTED; payload: JobPost }
+  | { message: typeof MessageType.JOB_POSTED; payload: Omit<JobPost, 'id' | 'status'> }
   | { message: typeof MessageType.JOB_PARSED; payload: ParsedJobPost }
   | { message: typeof MessageType.JOB_APPLICATION; payload: JobPost }
   | { message: typeof MessageType.JOB_APPLICATION_PARSED; payload: JobPost }
