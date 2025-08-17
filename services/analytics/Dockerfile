@@ -27,8 +27,7 @@ FROM node:22-alpine
 
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
-
-COPY --from=build-image ${FUNCTION_DIR} ./
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
 ENTRYPOINT ["/usr/local/bin/npx", "aws-lambda-ric"]
 CMD ["main.handler"]

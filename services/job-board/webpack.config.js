@@ -4,6 +4,7 @@ const { join } = require('path');
 module.exports = {
   output: {
     path: join(__dirname, 'dist'),
+    libraryTarget: 'commonjs',
   },
   plugins: [
     new NxAppWebpackPlugin({
@@ -15,7 +16,7 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
-      externalDependencies: "all"
+      externalDependencies: 'all',
     }),
   ],
 };
