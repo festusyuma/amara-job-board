@@ -9,11 +9,15 @@ const { STSClient, GetCallerIdentityCommand } = require('@aws-sdk/client-sts');
 const MessageType = {
   JOB_POSTED: 'JOB_POSTED',
   JOB_UPDATED: 'JOB_UPDATED',
+  PARSE_JOB: 'PARSE_JOB',
   JOB_PARSED: 'JOB_PARSED',
   JOB_APPLICATION: 'JOB_APPLICATION',
   JOB_APPLICATION_PARSED: 'JOB_APPLICATION_PARSED',
   JOB_BOARD_UPDATED: 'JOB_BOARD_UPDATED',
+  JOB_SYNC: 'JOB_SYNC',
   JOB_SYNC_UPDATED: 'JOB_SYNC_UPDATED',
+  NEW_CHAT_MESSAGE: 'NEW_CHAT_MESSAGE',
+  NEW_CHAT_RESPONSE: 'NEW_CHAT_RESPONSE',
 };
 
 const env = {
@@ -149,23 +153,30 @@ class AppStack extends cdk.Stack {
         handlers: [
           {
             messages: [
-              MessageType.JOB_APPLICATION,
+              MessageType.JOB_POSTED,
               MessageType.JOB_PARSED,
               MessageType.JOB_SYNC_UPDATED,
+              MessageType.JOB_APPLICATION,
+              MessageType.NEW_CHAT_MESSAGE,
+              MessageType.NEW_CHAT_RESPONSE,
             ],
             $resource: 'analytics',
           },
           {
             messages: [
+              MessageType.PARSE_JOB,
+              MessageType.NEW_CHAT_MESSAGE,
               MessageType.JOB_APPLICATION,
-              MessageType.JOB_POSTED,
-              MessageType.JOB_UPDATED,
             ],
             $resource: 'dataPipeline',
           },
           {
-            messages: [MessageType.JOB_POSTED, MessageType.JOB_UPDATED],
+            messages: [MessageType.JOB_PARSED],
             $resource: 'jobBoard',
+          },
+          {
+            messages: [MessageType.NEW_CHAT_RESPONSE],
+            $resource: 'serverEvent',
           },
         ],
       },
