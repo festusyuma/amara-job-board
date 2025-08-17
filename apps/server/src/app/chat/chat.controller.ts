@@ -1,4 +1,4 @@
-import { Body, Params } from '@fy-tools/rpc-server';
+import type { Body, Params } from '@fy-tools/rpc-server';
 
 import {
   chatController,
@@ -20,11 +20,11 @@ export class ChatController {
 
   @fetchMessages.Handler
   async getMessages() {
-    return { data: await this.service.fetchChats() };
+    return this.service.fetchChats();
   }
 
   @fetchChat.Handler
   getMessage(@fetchChat.Param('id') id: Params<fetchChat>['id']) {
-    return { data: [] };
+    return this.service.fetchMessages(id);
   }
 }

@@ -20,7 +20,7 @@ export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 export type Message =
   | {
       message: typeof MessageType.PARSE_JOB;
-      payload: Omit<JobPost, 'id' | 'status'>;
+      payload: { id: string, name: string };
     }
   | {
       message: typeof MessageType.JOB_POSTED;
@@ -28,7 +28,7 @@ export type Message =
     }
   | {
       message: typeof MessageType.JOB_PARSED;
-      payload: ParsedJobPost & { id: string };
+      payload: ParsedJobPost;
     }
   | { message: typeof MessageType.JOB_SYNC; payload: ParsedJobPost & JobPost }
   | { message: typeof MessageType.NEW_CHAT_MESSAGE; payload: ChatMessage }

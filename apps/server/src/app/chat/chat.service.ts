@@ -1,3 +1,4 @@
+import { ChatMessageTable, ChatTable } from '@amara/db';
 import { SnsService } from '@amara/helpers/util';
 import { MessagePayload, MessageType } from '@amara/types';
 import { Body } from '@fy-tools/rpc-server';
@@ -8,25 +9,35 @@ import { sendMessage } from '../schema/schema';
 
 @Injectable()
 export class ChatService {
-  constructor(private event: SnsService) {}
+  constructor(
+    private event: SnsService,
+    private chatTable: ChatTable,
+    private chatMessageTable: ChatMessageTable
+  ) {}
 
   async sendMessage(payload: Body<sendMessage>) {
     let chatId = payload.id;
 
     if (!chatId) {
-      // todo create new chat
-      chatId = v4();
+      const chat = {
+        id: v4(),
+        title: payload.message.slice(0, 50),
+        createdAt: new Date().toISOString(),
+      };
+
+      await this.chatTable.create(chat);
+      chatId = chat.id;
     }
 
     const chatMessage: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE> = {
+      id: v4(),
       files: [],
       message: payload.message,
-      id: v4(),
       chatId: chatId,
       createdAt: new Date().toISOString(),
     };
 
-    // todo create message
+    await this.chatMessageTable.create(chatMessage);
 
     await this.event.sendEvent({
       message: MessageType.NEW_CHAT_MESSAGE,
@@ -35,12 +46,12 @@ export class ChatService {
   }
 
   async fetchChats() {
-    // todo fetch chats from database
-    return [];
+    const chats = await this.chatTable.findAll();
+    return { data: chats };
   }
 
   async fetchMessages(id: string) {
-    // todo fetch messages from database
-    return [];
+    const messages = await this.chatMessageTable.findAllByChat(id);
+    return { data: messages };
   }
 }

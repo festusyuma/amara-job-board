@@ -1,6 +1,6 @@
 import { JobTable } from '@amara/db';
 import { type MessagePayload, MessageType, ParsedJobPost } from '@amara/types';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { ModelService } from '../util/model.service';
 
@@ -8,19 +8,20 @@ import { ModelService } from '../util/model.service';
 export class JobService {
   constructor(private model: ModelService, private jobTable: JobTable) {}
 
-  async parseJob(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
-    try {
-      const parsedJob = await this.model.generateJson<ParsedJobPost>(
-        this.getParseJobPrompt(data.name, data.description)
-      );
+  async parseJob(data: MessagePayload<typeof MessageType.PARSE_JOB>) {
+    const job = await this.jobTable.findById(data.id);
 
-      await this.jobTable.save(parsedJob);
-
-      return parsedJob;
-    } catch (error) {
-      console.error('Error parsing job post:', error);
-      throw new Error('Failed to parse job post.');
+    if (!job) {
+      throw new HttpException('invalid job id', HttpStatus.BAD_REQUEST);
     }
+
+    const parsedJob = await this.model.generateJson<ParsedJobPost>(
+      this.getParseJobPrompt(data.name, job.description)
+    );
+
+    await this.jobTable.save(parsedJob);
+
+    return parsedJob;
   }
 
   private getParseJobPrompt(name: string, jobDescription: string) {

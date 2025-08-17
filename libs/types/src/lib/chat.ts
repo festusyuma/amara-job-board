@@ -1,7 +1,7 @@
 export type Chat = {
   id: string
+  title: string,
   createdAt: string
-  updateAt: string
 }
 
 export type ChatMessage = {

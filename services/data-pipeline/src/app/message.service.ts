@@ -13,7 +13,7 @@ export class MessageService {
     private event: SnsService
   ) {}
 
-  async parseJobPost(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
+  async parseJobPost(data: MessagePayload<typeof MessageType.PARSE_JOB>) {
     const parsed = await this.parser.parseJob(data);
 
     await this.event.sendEvent({

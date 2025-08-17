@@ -1,3 +1,4 @@
+import { JobTable } from '@amara/db';
 import { SnsService } from '@amara/helpers/util';
 import { JobPost, MessageType, ParsedJobPost } from '@amara/types';
 import { Body } from '@fy-tools/rpc-server';
@@ -8,15 +9,20 @@ import { createJob } from '../schema/schema';
 
 @Injectable()
 export class JobService {
-  constructor(private event: SnsService) {}
+  constructor(private event: SnsService, private jobTable: JobTable) {}
 
   async createJob(payload: Body<createJob>) {
-    // todo save to database
-    Logger.log('created job :: ');
+    const job = {
+      id: v4(),
+      name: payload.name,
+      description: payload.description,
+    };
+
+    await this.jobTable.save(job);
 
     await this.event.sendEvent({
-      message: MessageType.JOB_POSTED,
-      payload: Object.assign(payload, { id: v4() }),
+      message: MessageType.PARSE_JOB,
+      payload: job,
     });
   }
 
@@ -26,7 +32,7 @@ export class JobService {
   }
 
   async fetchJobs() {
-    // todo fetch from database
-    return { data: [] };
+    const jobs = await this.jobTable.findAll();
+    return { data: jobs };
   }
 }

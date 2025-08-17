@@ -1,9 +1,9 @@
 import { EnvService } from '@amara/helpers/util';
-import { ParsedJobPost } from '@amara/types';
+import { JobPost, ParsedJobPost } from '@amara/types';
+import { ScanCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { Injectable } from '@nestjs/common';
 
 import { DynamoService } from '../dynamo.service';
-import { ScanCommandOutput } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
 export class JobTable {
@@ -13,14 +13,28 @@ export class JobTable {
     this.tableName = this.env.get('JOB_TABLE');
   }
 
-  async save({ id, name, ...parsedData }: ParsedJobPost) {
+  async findById(id: string): Promise<JobPost | undefined> {
+    const res = await this.db.get({
+      Key: { id },
+      TableName: this.tableName,
+    });
+
+    return res.Item as JobPost;
+  }
+
+  async save({
+    id,
+    name,
+    description,
+    ...parsedData
+  }: JobPost | ParsedJobPost) {
     const existing = await this.db.get({
       Key: { id },
       TableName: this.tableName,
     });
 
     if (existing.Item) {
-      await this.db.update({
+      return this.db.update({
         Key: { id },
         TableName: this.tableName,
         UpdateExpression:
@@ -30,13 +44,13 @@ export class JobTable {
           ':parsedData': parsedData,
         },
         ExpressionAttributeNames: {
-          '#parsedData': 'status',
+          '#parsedData': 'parsedData',
         },
         ReturnValues: 'UPDATED_NEW',
       });
     } else {
-      await this.db.put({
-        Item: { id, name, parsedData: parsedData },
+      return this.db.put({
+        Item: { id, name, description, parsedData: parsedData },
         TableName: this.tableName,
       });
     }

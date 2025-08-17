@@ -1,4 +1,4 @@
-export { type ChatMessage }  from "./lib/chat.js"
+export { type Chat,type ChatMessage }  from "./lib/chat.js"
 export {
   type JobPost,
   JobPostBoardSyncStatus,

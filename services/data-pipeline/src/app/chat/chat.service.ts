@@ -6,10 +6,10 @@ import { ModelService } from '../util/model.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private model: ModelService, private jobDb: JobTable) {}
+  constructor(private model: ModelService, private jobTable: JobTable) {}
 
   async respond(data: { message: string; filePaths: string[] }) {
-    const jobs = await this.jobDb.findAll();
+    const jobs = await this.jobTable.findAll();
     const message = await this.getChatPrompt(jobs, data.message);
 
     // let fileContents = '';

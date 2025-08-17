@@ -54,6 +54,14 @@ class AppStack extends cdk.Stack {
       billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
     });
 
+    chatMessageTable.addGlobalSecondaryIndex({
+      partitionKey: {
+        name: 'chatId',
+        type: dynamo.AttributeType.STRING,
+      },
+      indexName: 'by_chat',
+    });
+
     const cacheOption = { cacheFrom: undefined, cacheTo: undefined };
 
     if (process.env.GITHUB_ACTIONS === 'true') {

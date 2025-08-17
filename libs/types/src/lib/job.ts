@@ -2,7 +2,6 @@ export type JobPost = {
   id: string;
   name: string;
   description: string;
-  status: JobPostBoardSyncStatus;
 };
 
 export type ParsedJobSkill = {

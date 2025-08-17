@@ -1,4 +1,4 @@
-import { Body } from '@fy-tools/rpc-server';
+import type { Body } from '@fy-tools/rpc-server';
 
 import { createJob, fetchJobs, jobBoardController } from '../schema/schema';
 import { JobService } from './job.service';
