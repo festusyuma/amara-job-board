@@ -2,6 +2,7 @@ export type JobPost = {
   id: string;
   name: string;
   description: string;
+  parsedData?: ParsedJobPost
 };
 
 export type ParsedJobSkill = {

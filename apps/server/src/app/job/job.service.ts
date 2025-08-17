@@ -18,7 +18,7 @@ export class JobService {
       description: payload.description,
     };
 
-    await this.jobTable.save(job);
+    await this.jobTable.create(job);
 
     await this.event.sendEvent({
       message: MessageType.PARSE_JOB,

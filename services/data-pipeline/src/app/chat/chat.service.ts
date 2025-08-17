@@ -1,6 +1,10 @@
 import { ChatMessageTable, JobTable } from '@amara/db';
-import { MessagePayload, MessageType, ParsedJobPost } from '@amara/types';
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  JobPost,
+  MessagePayload,
+  MessageType,
+} from '@amara/types';
+import { Injectable } from '@nestjs/common';
 
 import { ModelService } from '../util/model.service';
 
@@ -15,7 +19,7 @@ export class ChatService {
   async respond(data: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>) {
     const jobs = await this.jobTable.findAll();
 
-    Logger.log(JSON.stringify({ jobs }, null, 2))
+    console.log(JSON.stringify({ jobs }, null, 2))
 
     const message = data.newChat
       ? await this.getChatPrompt(jobs, data.message)
@@ -23,7 +27,7 @@ export class ChatService {
           .findAllByChat(data.chatId)
           .then((res) => res.map((r) => r.message));
 
-    Logger.log(JSON.stringify({ message }, null, 2))
+    console.log(JSON.stringify({ message }, null, 2))
 
     // let fileContents = '';
     //
@@ -60,7 +64,7 @@ export class ChatService {
   }
 
   private async getChatPrompt(
-    jobs: ParsedJobPost[],
+    jobs: JobPost[],
     message: string,
     filePaths?: string[]
   ) {
@@ -76,26 +80,26 @@ Below are the jobs listed.
       .map(
         (job) => `
     **Job Details:**
-Job Title: ${job.jobTitle ?? 'N/A'}
-Experience Level: ${job.experienceLevel ?? 'N/A'}
-Type: ${job.type ?? `N/A`}
-Salary Range: ${job.salary?.currency} ${job.salary?.range?.[0] ?? `N/A`} - ${
-          job.salary?.range?.[1] ?? `N/A`
-        } ${job.salary?.frequency}
+Job Title: ${job.parsedData?.jobTitle ?? 'N/A'}
+Experience Level: ${job.parsedData?.experienceLevel ?? 'N/A'}
+Type: ${job.parsedData?.type ?? `N/A`}
+Salary Range: ${job.parsedData?.salary?.currency} ${job.parsedData?.salary?.range?.[0] ?? `N/A`} - ${
+          job.parsedData?.salary?.range?.[1] ?? `N/A`
+        } ${job.parsedData?.salary?.frequency}
 Required Skills:
-${job.requiredSkills
+${job.parsedData?.requiredSkills
   .map(
     (s) => `- ${s.name} (Weight: ${s.weight}, Years: ${s.yearsOfExperience}+)`
   )
   .join('\n')}
 Optional Skills:
-${job.optionalSkills
+${job.parsedData?.optionalSkills
   ?.map(
     (s) => `- ${s.name} (Weight: ${s.weight}, Years: ${s.yearsOfExperience}+)`
   )
   ?.join('\n')}
 Required Education:
-${job.educationRequired
+${job.parsedData?.educationRequired
   ?.map((e) => `- ${e.level} in ${e.course} (Weight: ${e.weight})`)
   ?.join('\n')}
     `

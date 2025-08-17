@@ -22,43 +22,39 @@ export class JobTable {
     return res.Item as JobPost;
   }
 
-  async save({
-    id,
-    name,
-    description,
-    ...parsedData
-  }: JobPost | ParsedJobPost) {
+  async create(data: JobPost) {
+    return this.db.put({
+      Item: { ...data, parsedDate: {} },
+      TableName: this.tableName,
+    });
+  }
+
+  async updateParsedData({ id, ...parsedData }: ParsedJobPost) {
     const existing = await this.db.get({
       Key: { id },
       TableName: this.tableName,
     });
 
-    if (existing.Item) {
-      return this.db.update({
-        Key: { id },
-        TableName: this.tableName,
-        UpdateExpression:
-          'SET updatedAt = :updatedAt, #parsedData = :parsedData',
-        ExpressionAttributeValues: {
-          ':updatedAt': new Date().toISOString(),
-          ':parsedData': parsedData,
-        },
-        ExpressionAttributeNames: {
-          '#parsedData': 'parsedData',
-        },
-        ReturnValues: 'UPDATED_NEW',
-      });
-    } else {
-      return this.db.put({
-        Item: { id, name, description, parsedData: parsedData },
-        TableName: this.tableName,
-      });
-    }
+    if (!existing.Item) return;
+
+    return this.db.update({
+      Key: { id },
+      TableName: this.tableName,
+      UpdateExpression: 'SET updatedAt = :updatedAt, #parsedData = :parsedData',
+      ExpressionAttributeValues: {
+        ':updatedAt': new Date().toISOString(),
+        ':parsedData': parsedData,
+      },
+      ExpressionAttributeNames: {
+        '#parsedData': 'parsedData',
+      },
+      ReturnValues: 'UPDATED_NEW',
+    });
   }
 
-  async findAll(): Promise<ParsedJobPost[]> {
+  async findAll(): Promise<JobPost[]> {
     let startKey: Record<string, unknown> | undefined = undefined;
-    let items: ParsedJobPost[] = [];
+    let items: JobPost[] = [];
 
     do {
       const res: ScanCommandOutput = await this.db.scan({
@@ -66,7 +62,7 @@ export class JobTable {
         ExclusiveStartKey: startKey,
       });
 
-      items = items.concat(res.Items as ParsedJobPost[]);
+      items = items.concat(res.Items as JobPost[]);
       startKey = res.LastEvaluatedKey;
     } while (startKey);
 
