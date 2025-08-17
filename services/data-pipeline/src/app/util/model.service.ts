@@ -18,7 +18,7 @@ export class ModelService {
       model: 'gemini-2.5-flash-lite',
     });
 
-    Logger.log(res);
+    Logger.log(JSON.stringify({ res }, null, 2));
 
     const text = res.text;
     if (!text) throw new Error('unable to generate');
@@ -33,7 +33,7 @@ export class ModelService {
       model: 'gemini-2.5-flash-lite',
     });
 
-    Logger.log(res);
+    Logger.log(JSON.stringify({ res }, null, 2));
 
     const text = res.text;
     if (!text) throw new Error('unable to generate');

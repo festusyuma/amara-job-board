@@ -14,13 +14,16 @@ export class ChatService {
 
   async respond(data: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>) {
     const jobs = await this.jobTable.findAll();
-    Logger.log({ jobs })
+
+    Logger.log(JSON.stringify({ jobs }, null, 2))
 
     const message = data.newChat
       ? await this.getChatPrompt(jobs, data.message)
       : await this.chatMessageTable
           .findAllByChat(data.chatId)
           .then((res) => res.map((r) => r.message));
+
+    Logger.log(JSON.stringify({ message }, null, 2))
 
     // let fileContents = '';
     //
@@ -40,7 +43,20 @@ export class ChatService {
     // }
     // todo push event
 
-    return await this.model.generateText(message);
+    const response = await this.model.generateText(message);
+
+    const chatMessage = {
+      id: data.id,
+      chatId: data.chatId,
+      message: response,
+      files: [],
+      from: 'system' as const,
+      createdAt: new Date().toISOString(),
+    };
+
+    await this.chatMessageTable.create(chatMessage);
+
+    return chatMessage;
   }
 
   private async getChatPrompt(

@@ -29,13 +29,7 @@ export class MessageService {
 
     await this.event.sendEvent({
       message: MessageType.NEW_CHAT_RESPONSE,
-      payload: {
-        id: data.id,
-        message,
-        chatId: data.chatId,
-        files: [],
-        createdAt: new Date().toISOString(),
-      },
+      payload: message,
     });
   }
 }
