@@ -17,6 +17,7 @@ export class ChatService {
 
   async sendMessage(payload: Body<sendMessage>) {
     let chatId = payload.id;
+    let newChat = false
 
     if (!chatId) {
       const chat = {
@@ -26,11 +27,14 @@ export class ChatService {
       };
 
       await this.chatTable.create(chat);
+
+      newChat = true;
       chatId = chat.id;
     }
 
     const chatMessage: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE> = {
       id: v4(),
+      newChat,
       files: [],
       message: payload.message,
       chatId: chatId,

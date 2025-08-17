@@ -27,7 +27,7 @@ export class ModelService {
     return JSON.parse(jsonString) as T;
   }
 
-  async generateText(content: string) {
+  async generateText(content: string | string[]) {
     const res = await this.ai.models.generateContent({
       contents: content,
       model: 'gemini-2.5-flash-lite',

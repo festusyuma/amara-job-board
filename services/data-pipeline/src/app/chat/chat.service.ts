@@ -1,16 +1,26 @@
-import { JobTable } from '@amara/db';
-import { ParsedJobPost } from '@amara/types';
-import { Injectable } from '@nestjs/common';
+import { ChatMessageTable, JobTable } from '@amara/db';
+import { MessagePayload, MessageType, ParsedJobPost } from '@amara/types';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { ModelService } from '../util/model.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private model: ModelService, private jobTable: JobTable) {}
+  constructor(
+    private model: ModelService,
+    private jobTable: JobTable,
+    private chatMessageTable: ChatMessageTable
+  ) {}
 
-  async respond(data: { message: string; filePaths: string[] }) {
+  async respond(data: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>) {
     const jobs = await this.jobTable.findAll();
-    const message = await this.getChatPrompt(jobs, data.message);
+    Logger.log({ jobs })
+
+    const message = data.newChat
+      ? await this.getChatPrompt(jobs, data.message)
+      : await this.chatMessageTable
+          .findAllByChat(data.chatId)
+          .then((res) => res.map((r) => r.message));
 
     // let fileContents = '';
     //

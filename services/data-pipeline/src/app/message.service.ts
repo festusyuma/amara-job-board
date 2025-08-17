@@ -25,10 +25,7 @@ export class MessageService {
   async handleNewMessage(
     data: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>
   ) {
-    const message = await this.chat.respond({
-      message: data.message,
-      filePaths: [],
-    });
+    const message = await this.chat.respond(data);
 
     await this.event.sendEvent({
       message: MessageType.NEW_CHAT_RESPONSE,

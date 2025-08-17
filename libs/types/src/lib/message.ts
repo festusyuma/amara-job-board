@@ -31,7 +31,7 @@ export type Message =
       payload: ParsedJobPost;
     }
   | { message: typeof MessageType.JOB_SYNC; payload: ParsedJobPost & JobPost }
-  | { message: typeof MessageType.NEW_CHAT_MESSAGE; payload: ChatMessage }
+  | { message: typeof MessageType.NEW_CHAT_MESSAGE; payload: ChatMessage & { newChat?: boolean } }
   | { message: typeof MessageType.NEW_CHAT_RESPONSE; payload: ChatMessage }
   | { message: typeof MessageType.JOB_APPLICATION; payload: JobPost }
   | { message: typeof MessageType.JOB_APPLICATION_PARSED; payload: JobPost }
