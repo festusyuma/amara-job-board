@@ -187,6 +187,7 @@ class AppStack extends cdk.Stack {
         CHAT_MESSAGE_TABLE: chatMessageTable.tableName,
         DATABASE_URL: 'db',
       },
+      outputs: true,
     });
 
     const server = app.ecs.server;
