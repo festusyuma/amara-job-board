@@ -1,4 +1,5 @@
-import type { Message } from "@amara/types"
+import type { MessageType } from '@amara/types';
+import { Logger } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
 /**
@@ -6,11 +7,12 @@ import { MessagePattern } from '@nestjs/microservices';
  * */
 
 export class MessageController {
-  @MessagePattern("DEFAULT")
-  testEvent(payload: Message) {
-    /**
-     * Default analytics operation goes here
-     * */
-    return { success: true, payload }
+  /**
+   * Default analytics operation goes here
+   * */
+  @MessagePattern('*')
+  testEvent(payload: unknown, message: MessageType) {
+    Logger.log(`analytics event :: ${message}`);
+    return { success: true, payload };
   }
 }

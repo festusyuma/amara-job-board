@@ -30,7 +30,23 @@ class AppStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const dataPipelineTable = new dynamo.Table(this, 'DataPipelineTable', {
+    const jobTable = new dynamo.Table(this, 'JobTable', {
+      partitionKey: {
+        name: 'id',
+        type: dynamo.AttributeType.STRING,
+      },
+      billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
+    });
+
+    const chatTable = new dynamo.Table(this, 'ChatTable', {
+      partitionKey: {
+        name: 'id',
+        type: dynamo.AttributeType.STRING,
+      },
+      billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
+    });
+
+    const chatMessageTable = new dynamo.Table(this, 'ChatMessageTable', {
       partitionKey: {
         name: 'id',
         type: dynamo.AttributeType.STRING,
@@ -121,11 +137,6 @@ class AppStack extends cdk.Stack {
           },
         },
       },
-      secret: {
-        GEMINI_KEY: process.env.GEMINI_KEY,
-        PIPELINE_JOB_TABLE: dataPipelineTable.tableName,
-        DATABASE_URL: 'db',
-      },
       event: {
         handlers: [
           {
@@ -150,6 +161,13 @@ class AppStack extends cdk.Stack {
           },
         ],
       },
+      secret: {
+        GEMINI_KEY: process.env.GEMINI_KEY,
+        JOB_TABLE: jobTable.tableName,
+        CHAT_TABLE: chatTable.tableName,
+        CHAT_MESSAGE_TABLE: chatMessageTable.tableName,
+        DATABASE_URL: 'db',
+      },
     });
 
     const server = app.ecs.server;
@@ -162,11 +180,20 @@ class AppStack extends cdk.Stack {
           ec2.Port.tcp(3001)
         );
       }
+
+      const taskRole = server.definition.taskRole;
+
+      chatTable.grantFullAccess(taskRole);
+      chatMessageTable.grantFullAccess(taskRole);
+      jobTable.grantFullAccess(taskRole);
     }
 
     const dataPipeline = app.lambda.apps.dataPipeline;
+
     if (dataPipeline) {
-      dataPipelineTable.grantFullAccess(dataPipeline.function);
+      jobTable.grantFullAccess(dataPipeline.function);
+      chatTable.grantFullAccess(dataPipeline.function);
+      chatMessageTable.grantFullAccess(dataPipeline.function);
     }
   }
 }

@@ -1,12 +1,12 @@
 import { Body } from '@fy-tools/rpc-server';
 
 import { createJob, fetchJobs, jobBoardController } from '../schema/schema';
-import { JobBoardService } from './job-board.service';
+import { JobService } from './job.service';
 
 @jobBoardController.Controller
-export class JobBoardController {
+export class JobController {
 
-  constructor(private service: JobBoardService) {
+  constructor(private service: JobService) {
   }
 
   @createJob.Handler

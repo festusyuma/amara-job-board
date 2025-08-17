@@ -12,7 +12,7 @@ export class ModelService {
     });
   }
 
-  async generate<T>(content: string) {
+  async generateJson<T>(content: string) {
     const res = await this.ai.models.generateContent({
       contents: content,
       model: 'gemini-2.5-flash-lite',
@@ -25,5 +25,19 @@ export class ModelService {
 
     const jsonString = res.text.replace(/```json\n|\n```/g, '').trim();
     return JSON.parse(jsonString) as T;
+  }
+
+  async generateText(content: string) {
+    const res = await this.ai.models.generateContent({
+      contents: content,
+      model: 'gemini-2.5-flash-lite',
+    });
+
+    Logger.log(res);
+
+    const text = res.text;
+    if (!text) throw new Error('unable to generate');
+
+    return res.text.trim();
   }
 }

@@ -9,7 +9,7 @@ export class JobDb {
   private readonly tableName: string;
 
   constructor(private env: EnvService, private db: DynamoService) {
-    this.tableName = this.env.get('STORAGE_NAME');
+    this.tableName = this.env.get('JOB_TABLE');
   }
 
   async save({ id, name, ...parsedData }: ParsedJobPost) {
@@ -39,5 +39,22 @@ export class JobDb {
         TableName: this.tableName,
       });
     }
+  }
+
+  async findAll(): Promise<ParsedJobPost[]> {
+    let startKey: Record<string, unknown> | undefined = undefined;
+    let items: ParsedJobPost[] = [];
+
+    do {
+      const res = await this.db.scan({
+        TableName: this.tableName,
+        ExclusiveStartKey: startKey,
+      });
+
+      items = items.concat(res.Items as ParsedJobPost[]);
+      startKey = res.LastEvaluatedKey;
+    } while (startKey);
+
+    return items;
   }
 }

@@ -7,15 +7,9 @@ import { MessagePattern } from '@nestjs/microservices';
  * */
 
 export class MessageController {
-  @MessagePattern(MessageType.JOB_POSTED)
-  jobPosted(payload: MessagePayload<typeof MessageType.JOB_POSTED>) {
+  @MessagePattern(MessageType.JOB_SYNC)
+  jobPosted(payload: MessagePayload<typeof MessageType.JOB_SYNC>) {
     Logger.log("Job board: job posted");
-    return { success: true, payload };
-  }
-
-  @MessagePattern(MessageType.JOB_UPDATED)
-  jobUpdated(payload: MessagePayload<typeof MessageType.JOB_POSTED>) {
-    Logger.log("Job board: job updated");
     return { success: true, payload };
   }
 }

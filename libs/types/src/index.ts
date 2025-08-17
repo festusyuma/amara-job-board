@@ -1,3 +1,4 @@
+export { type ChatMessage }  from "./lib/chat.js"
 export {
   type JobPost,
   JobPostBoardSyncStatus,

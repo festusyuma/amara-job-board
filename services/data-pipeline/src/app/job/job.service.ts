@@ -4,12 +4,12 @@ import { Injectable } from '@nestjs/common';
 import { ModelService } from '../util/model.service';
 
 @Injectable()
-export class ParserService {
+export class JobService {
   constructor(private model: ModelService) {}
 
   async parseJob(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
     try {
-      return await this.model.generate<ParsedJobPost>(
+      return await this.model.generateJson<ParsedJobPost>(
         this.getParseJobPrompt(data.name, data.description)
       );
     } catch (error) {
@@ -139,4 +139,5 @@ export class ParserService {
     \`\`\`
     `;
   }
+
 }

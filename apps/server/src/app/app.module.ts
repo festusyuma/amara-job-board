@@ -2,10 +2,10 @@ import { UtilModule } from '@amara/helpers/util';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
-import { JobBoardModule } from './job-board/job-board.module';
+import { JobModule } from './job/job.module';
 
 @Module({
-  imports: [UtilModule, JobBoardModule],
+  imports: [UtilModule, JobModule],
   controllers: [AppController],
   providers: [],
 })

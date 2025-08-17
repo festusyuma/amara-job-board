@@ -1,9 +1,11 @@
 import { Logger } from '@nestjs/common';
-import type { Handler,SQSEvent } from 'aws-lambda'
+import type { Handler, SQSEvent } from 'aws-lambda';
 
 import type { PlaceholderTransporter } from '../placeholder-transporter';
 
-export function sqsHandler(app: Promise<PlaceholderTransporter>): Handler<SQSEvent> {
+export function sqsHandler(
+  app: Promise<PlaceholderTransporter>
+): Handler<SQSEvent> {
   return async (event, context, cb) => {
     const transporter = await app;
 
@@ -12,7 +14,9 @@ export function sqsHandler(app: Promise<PlaceholderTransporter>): Handler<SQSEve
 
       const event = JSON.parse(record.body);
 
-      const handler = transporter.getHandlerByPattern(event.message);
+      let handler = transporter.getHandlerByPattern(event.message);
+      if (!handler) handler = transporter.getHandlerByPattern('*');
+
       await handler?.(event.payload, context);
     }
   };

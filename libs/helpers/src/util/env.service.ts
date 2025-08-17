@@ -20,7 +20,9 @@ export const EnvSchema = z.object({
   // STORAGE_LOG_TABLE: z.string(),
   EVENT_TOPIC: z.string(),
   GEMINI_KEY: z.string(),
-  PIPELINE_JOB_TABLE: z.string()
+  JOB_TABLE: z.string(),
+  CHAT_TABLE: z.string(),
+  CHAT_MESSAGE_TABLE: z.string(),
   // REDEMPTION_SYNC_FREQUENCY: z.pipe(
   //   z._default(z.string(), 'month'),
   //   z.transform((i) => i as DateTimeUnit)
