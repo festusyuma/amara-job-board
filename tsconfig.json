@@ -29,6 +29,9 @@
     },
     {
       "path": "./services/data-pipeline"
+    },
+    {
+      "path": "./libs/db"
     }
   ]
 }

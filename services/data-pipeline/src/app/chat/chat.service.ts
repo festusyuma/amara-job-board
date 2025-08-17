@@ -1,14 +1,16 @@
+import { JobTable } from '@amara/db';
+import { ParsedJobPost } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
-import { JobDb } from '../db/job.db';
 import { ModelService } from '../util/model.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private model: ModelService, private jobDb: JobDb) {}
+  constructor(private model: ModelService, private jobDb: JobTable) {}
 
-  async respond(data: { message: string, filePaths: string[] }) {
-    const message = await this.getChatPrompt(data.message);
+  async respond(data: { message: string; filePaths: string[] }) {
+    const jobs = await this.jobDb.findAll();
+    const message = await this.getChatPrompt(jobs, data.message);
 
     // let fileContents = '';
     //
@@ -31,9 +33,11 @@ export class ChatService {
     return await this.model.generateText(message);
   }
 
-  private async getChatPrompt(message: string, filePaths?: string[]) {
-    const jobs = await this.jobDb.findAll();
-
+  private async getChatPrompt(
+    jobs: ParsedJobPost[],
+    message: string,
+    filePaths?: string[]
+  ) {
     return `
 You are an AI recruiter. Your goal is to provide a insight about jobs and perform professional assessment of a when needed.".
 

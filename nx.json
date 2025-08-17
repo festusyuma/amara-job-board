@@ -35,7 +35,8 @@
         "libs/file/*",
         "services/analytics/*",
         "services/helpers/*",
-        "libs/helpers/*"
+        "libs/helpers/*",
+        "libs/db/*"
       ]
     },
     {
@@ -63,7 +64,8 @@
         "libs/file/*",
         "services/analytics/*",
         "services/helpers/*",
-        "libs/helpers/*"
+        "libs/helpers/*",
+        "libs/db/*"
       ],
       "options": {
         "typecheck": {

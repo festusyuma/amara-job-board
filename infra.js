@@ -68,22 +68,22 @@ class AppStack extends cdk.Stack {
       ownerArn: props.ownerArn,
       storage: { retainOnDelete: false },
       ecs: {
-        server: {
-          assignPublicIp: true,
-          apps: {
-            api: {
-              type: AppType.IMAGE_APP,
-              output: './apps/server',
-              port: 3001,
-              container: {
-                command: ['node', 'main.js'],
-                image: { ...cacheOption },
-              },
-              attachment: { secret: true },
-            },
-          },
-          grants: [AppGrant.EVENT, AppGrant.SECRET],
-        },
+        // server: {
+        //   assignPublicIp: true,
+        //   apps: {
+        //     api: {
+        //       type: AppType.IMAGE_APP,
+        //       output: './apps/server',
+        //       port: 3001,
+        //       container: {
+        //         command: ['node', 'main.js'],
+        //         image: { ...cacheOption },
+        //       },
+        //       attachment: { secret: true },
+        //     },
+        //   },
+        //   grants: [AppGrant.EVENT, AppGrant.SECRET],
+        // },
       },
       lambda: {
         serverEvent: {
@@ -194,6 +194,12 @@ class AppStack extends cdk.Stack {
       jobTable.grantFullAccess(dataPipeline.function);
       chatTable.grantFullAccess(dataPipeline.function);
       chatMessageTable.grantFullAccess(dataPipeline.function);
+    }
+
+    const jobBoard = app.lambda.apps.jobBoard;
+
+    if (dataPipeline) {
+      jobTable.grantFullAccess(jobBoard.function);
     }
   }
 }

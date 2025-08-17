@@ -3,7 +3,6 @@ import { type MessagePayload, MessageType } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
 import { ChatService } from './chat/chat.service';
-import { JobDb } from './db/job.db';
 import { JobService } from './job/job.service';
 
 @Injectable()
@@ -11,14 +10,11 @@ export class MessageService {
   constructor(
     private parser: JobService,
     private chat: ChatService,
-    private jobDb: JobDb,
     private event: SnsService
   ) {}
 
   async parseJobPost(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
     const parsed = await this.parser.parseJob(data);
-
-    await this.jobDb.save(parsed);
 
     await this.event.sendEvent({
       message: MessageType.JOB_PARSED,

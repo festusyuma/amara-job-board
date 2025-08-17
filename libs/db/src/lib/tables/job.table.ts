@@ -2,10 +2,11 @@ import { EnvService } from '@amara/helpers/util';
 import { ParsedJobPost } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
-import { DynamoService } from './dynamo.service';
+import { DynamoService } from '../dynamo.service';
+import { ScanCommandOutput } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
-export class JobDb {
+export class JobTable {
   private readonly tableName: string;
 
   constructor(private env: EnvService, private db: DynamoService) {
@@ -46,7 +47,7 @@ export class JobDb {
     let items: ParsedJobPost[] = [];
 
     do {
-      const res = await this.db.scan({
+      const res: ScanCommandOutput = await this.db.scan({
         TableName: this.tableName,
         ExclusiveStartKey: startKey,
       });

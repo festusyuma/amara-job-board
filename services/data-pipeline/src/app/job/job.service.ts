@@ -1,3 +1,4 @@
+import { JobTable } from '@amara/db';
 import { type MessagePayload, MessageType, ParsedJobPost } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
@@ -5,13 +6,17 @@ import { ModelService } from '../util/model.service';
 
 @Injectable()
 export class JobService {
-  constructor(private model: ModelService) {}
+  constructor(private model: ModelService, private jobTable: JobTable) {}
 
   async parseJob(data: MessagePayload<typeof MessageType.JOB_POSTED>) {
     try {
-      return await this.model.generateJson<ParsedJobPost>(
+      const parsedJob = await this.model.generateJson<ParsedJobPost>(
         this.getParseJobPrompt(data.name, data.description)
       );
+
+      await this.jobTable.save(parsedJob);
+
+      return parsedJob;
     } catch (error) {
       console.error('Error parsing job post:', error);
       throw new Error('Failed to parse job post.');
@@ -139,5 +144,4 @@ export class JobService {
     \`\`\`
     `;
   }
-
 }
