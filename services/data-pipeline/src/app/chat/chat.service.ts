@@ -50,12 +50,12 @@ Below are the jobs listed.
       .map(
         (job) => `
     **Job Details:**
-Job Title: ${job.jobTitle}
-Experience Level: ${job.experienceLevel}
-Type: ${job.type}
-Salary Range: ${job.salary.currency} ${job.salary.range[0]} - ${
-          job.salary.range[1]
-        } ${job.salary.frequency}
+Job Title: ${job.jobTitle ?? 'N/A'}
+Experience Level: ${job.experienceLevel ?? 'N/A'}
+Type: ${job.type ?? `N/A`}
+Salary Range: ${job.salary?.currency} ${job.salary?.range?.[0] ?? `N/A`} - ${
+          job.salary?.range?.[1] ?? `N/A`
+        } ${job.salary?.frequency}
 Required Skills:
 ${job.requiredSkills
   .map(
@@ -64,17 +64,17 @@ ${job.requiredSkills
   .join('\n')}
 Optional Skills:
 ${job.optionalSkills
-  .map(
+  ?.map(
     (s) => `- ${s.name} (Weight: ${s.weight}, Years: ${s.yearsOfExperience}+)`
   )
-  .join('\n')}
+  ?.join('\n')}
 Required Education:
 ${job.educationRequired
-  .map((e) => `- ${e.level} in ${e.course} (Weight: ${e.weight})`)
-  .join('\n')}
+  ?.map((e) => `- ${e.level} in ${e.course} (Weight: ${e.weight})`)
+  ?.join('\n')}
     `
       )
-      .join('\n')}
+      ?.join('\n')}
 
 Let the user know they have no jobs if there are no job details above.
 
