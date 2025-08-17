@@ -19,7 +19,7 @@ export class JobService {
       this.getParseJobPrompt(data.name, job.description)
     );
 
-    await this.jobTable.save(parsedJob);
+    await this.jobTable.save(Object.assign(parsedJob, { id: job.id }));
 
     return parsedJob;
   }

@@ -10,6 +10,9 @@
       "path": "../../libs/types"
     },
     {
+      "path": "../../libs/db"
+    },
+    {
       "path": "../../libs/helpers"
     },
     {
