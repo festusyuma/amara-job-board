@@ -29,6 +29,7 @@ npx nx serve server
 ```
 
 The server will start on the port defined in your configuration (by default `3000`).
+The Docs can be accessed at http://{host}:{port}/api/docs
 
 ## Deployment
 

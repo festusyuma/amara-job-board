@@ -28,7 +28,9 @@ async function bootstrap() {
     },
   };
 
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    useGlobalPrefix: true
+  });
 
   await app.listen(port);
 

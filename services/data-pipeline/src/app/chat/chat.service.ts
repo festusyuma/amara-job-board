@@ -1,9 +1,5 @@
 import { ChatMessageTable, JobTable } from '@amara/db';
-import {
-  JobPost,
-  MessagePayload,
-  MessageType,
-} from '@amara/types';
+import { JobPost, MessagePayload, MessageType } from '@amara/types';
 import { Injectable } from '@nestjs/common';
 
 import { ModelService } from '../util/model.service';
@@ -19,15 +15,16 @@ export class ChatService {
   async respond(data: MessagePayload<typeof MessageType.NEW_CHAT_MESSAGE>) {
     const jobs = await this.jobTable.findAll();
 
-    console.log(JSON.stringify({ jobs }, null, 2))
+    console.log(JSON.stringify({ jobs }, null, 2));
 
-    const message = data.newChat
-      ? await this.getChatPrompt(jobs, data.message)
-      : await this.chatMessageTable
-          .findAllByChat(data.chatId)
-          .then((res) => res.map((r) => r.message));
+    const message = await this.getChatPrompt(
+      jobs,
+      data.newChat
+        ? [{ message: data.message }]
+        : await this.chatMessageTable.findAllByChat(data.chatId)
+    );
 
-    console.log(JSON.stringify({ message }, null, 2))
+    console.log(JSON.stringify({ message }, null, 2));
 
     // let fileContents = '';
     //
@@ -65,7 +62,7 @@ export class ChatService {
 
   private async getChatPrompt(
     jobs: JobPost[],
-    message: string,
+    message: { message: string; from?: 'system' }[],
     filePaths?: string[]
   ) {
     return `
@@ -83,9 +80,11 @@ Below are the jobs listed.
 Job Title: ${job.parsedData?.jobTitle ?? 'N/A'}
 Experience Level: ${job.parsedData?.experienceLevel ?? 'N/A'}
 Type: ${job.parsedData?.type ?? `N/A`}
-Salary Range: ${job.parsedData?.salary?.currency} ${job.parsedData?.salary?.range?.[0] ?? `N/A`} - ${
-          job.parsedData?.salary?.range?.[1] ?? `N/A`
-        } ${job.parsedData?.salary?.frequency}
+Salary Range: ${job.parsedData?.salary?.currency} ${
+          job.parsedData?.salary?.range?.[0] ?? `N/A`
+        } - ${job.parsedData?.salary?.range?.[1] ?? `N/A`} ${
+          job.parsedData?.salary?.frequency
+        }
 Required Skills:
 ${job.parsedData?.requiredSkills
   .map(
@@ -111,7 +110,13 @@ Let the user know they have no jobs if there are no job details above.
 **Output Format:**
 Your response should be a professional recruiter's assistant, structured as follows. Do not include any code blocks or JSON.
 
-${message}
+
+${message.map(
+  (m) => `
+${m.from ? `## You` : `## Me`}
+${m.message}
+`
+)}
     `;
   }
 }
